@@ -3,7 +3,7 @@ import Sizes from '@tools/Sizes'
 import Time from '@tools/Time'
 import Assets from '@tools/Loader'
 // IMPORT APP
-import '@style/style.styl'
+import '@scss/main.scss'
 import App from '@js/App'
 
 // LOADER TEMPLATE
@@ -22,9 +22,8 @@ const loader = `
 const time = new Time()
 const sizes = new Sizes()
 const assets = new Assets({
-  template: loader
+  template: loader,
 })
-
 
 // SET APP
 new App({

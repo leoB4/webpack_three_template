@@ -27,12 +27,14 @@
     "mini-css-extract-plugin": "^2.4.3",
     "prettier": "^2.4.1",
     "raw-loader": "^4.0.2",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "stylus": "^0.55.0",
     "stylus-loader": "^6.2.0",
     "three": "^0.134.0",
     "tweakpane": "^3.0.5",
-    "webpack": "^5.61.0",
+    "webpack": "^5.70.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0",
     "webpack-merge": "^5.8.0"
@@ -45,7 +47,7 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Lissandre Pasdeloup",
+  "author": "Lissandre Pasdeloup - Léo Blondin",
   "license": "ISC",
   "repository": {
     "type": "git",
@@ -54,5 +56,9 @@
   "bugs": {
     "url": "https://github.com/Lissandre/three_template/issues"
   },
-  "homepage": "https://github.com/Lissandre/three_template#readme"
+  "homepage": "https://github.com/Lissandre/three_template#readme",
+  "dependencies": {
+    "stats.js": "^0.17.0",
+    "stylelint": "^14.5.3"
+  }
 }

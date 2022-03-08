@@ -3,8 +3,7 @@ const webpackMerge = require('webpack-merge')
 const commonConfiguration = require('./webpack.common.js')
 
 module.exports = webpackMerge.merge(
-  commonConfiguration,
-  {
+  commonConfiguration, {
     mode: 'development',
     devtool: 'source-map',
     plugins: [
@@ -50,15 +49,25 @@ module.exports = webpackMerge.merge(
       version: false,
     },
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.(styl|css)$/,
           use: [
             'style-loader',
             'css-loader',
             'stylus-loader'
           ]
-        }
+        },
+        {
+          test: /\.s[ac]ss$/i,
+          use: [
+            // Creates `style` nodes from JS strings
+            "style-loader",
+            // Translates CSS into CommonJS
+            "css-loader",
+            // Compiles Sass to CSS
+            "sass-loader",
+          ],
+        },
       ]
     }
   }

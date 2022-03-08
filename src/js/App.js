@@ -1,106 +1,115 @@
-import { Scene, sRGBEncoding, WebGLRenderer } from 'three'
+import {
+	Scene,
+	sRGBEncoding,
+	WebGLRenderer
+} from 'three'
 
-import { Pane } from 'tweakpane'
-import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
-import * as CamerakitPlugin from '@tweakpane/plugin-camerakit';
-
+import {
+	store
+} from '@tools/Store'
 import Camera from './Camera'
-import World from '@world/index'
+import World from '@js/world'
+import Raycaster from '@js/tools/Raycasters'
+import Mouse from '@js/tools/Mouse'
+import Debug from '@js/tools/Debug'
+
+import Keyboard from './tools/Keyboard'
 
 export default class App {
-  constructor(options) {
-    // Set options
-    this.canvas = options.canvas
-    this.time = options.time
-    this.sizes = options.sizes
-    this.assets = options.assets
+	static instance
+	constructor(options) {
+		// Set options
+		this.canvas = options.canvas
+		this.time = options.time
+		this.sizes = options.sizes
+		this.assets = options.assets
 
-    // Set up
-    this.setConfig()
-    this.setRenderer()
-    this.setCamera()
-    this.setWorld()
-  }
-  setRenderer() {
-    // Set scene
-    this.scene = new Scene()
-    // Set renderer
-    this.renderer = new WebGLRenderer({
-      canvas: this.canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    })
-    this.renderer.outputEncoding = sRGBEncoding
-    this.renderer.gammaFactor = 2.2
-    // Set background color
-    this.renderer.setClearColor(0x212121, 1)
-    // Set renderer pixel ratio & sizes
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height)
-    // Resize renderer on resize event
-    this.sizes.on('resize', () => {
-      this.renderer.setSize(
-        this.sizes.viewport.width,
-        this.sizes.viewport.height
-      )
-    })
+		console.log(this.assets);
 
-    this.time.on('tick', () => {
-      this.debug && this.fpsGraph.begin()
+		App.instance = this
 
-      this.renderer.render(this.scene, this.camera.camera)
-    
-      this.debug && this.fpsGraph.end()
-    })
+		// Set up
+		console.log('✨ Init app ✨')
+		this.setRenderer()
+		this.setCamera()
+		this.initDebug()
+		this.setWorld()
+		this.initEvents()
+	}
 
-    if (this.debug) {
-      this.renderOnBlur = { activated: true }
-      const folder = this.debug.addFolder({
-        title: 'Renderer',
-        expanded: false
-      })
-      folder
-        .addInput(this.renderOnBlur, 'activated', {
-          label: 'Opti'
-        })
-    }
-  }
-  setCamera() {
-    // Create camera instance
-    this.camera = new Camera({
-      sizes: this.sizes,
-      renderer: this.renderer,
-      debug: this.debug,
-    })
-    // Add camera to scene
-    this.scene.add(this.camera.container)
-  }
-  setWorld() {
-    // Create world instance
-    this.world = new World({
-      time: this.time,
-      debug: this.debug,
-      assets: this.assets,
-    })
-    // Add world to scene
-    this.scene.add(this.world.container)
-  }
-  setConfig() {
-    if (window.location.hash === '#debug') {
-      this.debug = new Pane({
-        title: 'DEBUG',
-        expanded: false,
-      })
+	initEvents() {
+		this.keyboard = new Keyboard()
+		this.keyboard.on('key', (e) => {
+			console.log(e)
+		})
 
-      this.debug.registerPlugin(EssentialsPlugin)
-      this.debug.registerPlugin(CamerakitPlugin)
+		this.mouse = new Mouse()
+		this.raycaster = new Raycaster()
+		this.raycaster.on('raycast', (e) => {
+			console.log('RAYCAST : ', e)
+		})
+	}
 
-      this.fpsGraph = this.debug.addBlade({
-        view: 'fpsgraph',
-        label: 'FPS',
-        lineCount: 2,
-      })
-    }
-  }
+	initDebug() {
+		this.debug = new Debug()
+	}
+
+	setRenderer() {
+		// Set scene
+		this.scene = new Scene()
+		// Set renderer
+		this.renderer = new WebGLRenderer({
+			canvas: this.canvas,
+			alpha: true,
+			antialias: true,
+			powerPreference: 'high-performance',
+		})
+		this.renderer.outputEncoding = sRGBEncoding
+		this.renderer.gammaFactor = 2.2
+		// Set background color
+		this.renderer.setClearColor(0x0000ff, 1)
+		// Set renderer pixel ratio & sizes
+		this.renderer.setPixelRatio(window.devicePixelRatio)
+		this.renderer.setSize(store.resolution.width, store.resolution.height)
+		// Resize renderer on resize event
+		this.sizes.on('resize', () => {
+			this.renderer.setSize(
+				store.resolution.width,
+				store.resolution.height
+			)
+		})
+
+		this.time.on('tick', () => {
+			this.renderer.render(this.scene, this.camera.camera)
+			if (this.raycaster) this.raycaster.update()
+			if (this.debug.stats) this.debug.stats.update()
+		})
+	}
+
+	setCamera() {
+		// Create camera instance
+		this.camera = new Camera({
+			sizes: this.sizes,
+			renderer: this.renderer,
+		})
+		// Add camera to scene
+		this.scene.add(this.camera.container)
+	}
+
+	setWorld() {
+		// Create world instance
+		this.world = new World({
+			time: this.time,
+			debug: this.debug,
+			assets: this.assets,
+		})
+		// Add world to scene
+		this.scene.add(this.world.container)
+	}
+}
+
+export const getWebgl = (options) => {
+	if (App.instance) return App.instance
+
+	return new App(options)
 }

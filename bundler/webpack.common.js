@@ -12,22 +12,32 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, '../src/'),
       '@fonts': path.resolve(__dirname, '../src/fonts/'),
-      '@style': path.resolve(__dirname, '../src/style/'),
+      '@scss': path.resolve(__dirname, '../src/scss/'),
       '@models': path.resolve(__dirname, '../src/models/'),
       '@shaders': path.resolve(__dirname, '../src/shaders/'),
       '@sounds': path.resolve(__dirname, '../src/sounds/'),
       '@textures': path.resolve(__dirname, '../src/textures/'),
       '@js': path.resolve(__dirname, '../src/js/'),
-      '@tools': path.resolve(__dirname, '../src/js/Tools/'),
+      '@tools': path.resolve(__dirname, '../src/js/tools/'),
       '@world': path.resolve(__dirname, '../src/js/World/'),
     }
   },
   plugins: [
-    new CopyWebpackPlugin({ 
-      patterns: [
-        { from: 'static', to: '' },
-        { from: '*.json', to: 'assets/fonts', context: "src/fonts", noErrorOnMissing: true },
-        { from: 'node_modules/three/examples/js/libs/draco/', to: './draco' }
+    new CopyWebpackPlugin({
+      patterns: [{
+          from: 'static',
+          to: ''
+        },
+        {
+          from: '*.json',
+          to: 'assets/fonts',
+          context: "src/fonts",
+          noErrorOnMissing: true
+        },
+        {
+          from: 'node_modules/three/examples/js/libs/draco/',
+          to: './draco'
+        }
       ]
     }),
     new HtmlWebpackPlugin({
@@ -38,33 +48,32 @@ module.exports = {
     }),
   ],
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.(jpg|png|gif|svg|jpeg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/images/' },
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/images/'
           },
-        ],
+        }, ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/fonts/' },
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/fonts/'
           },
-        ],
+        }, ],
       },
       {
         test: /\.(html)$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: { sources : false }
+        use: [{
+          loader: 'html-loader',
+          options: {
+            sources: false
           }
-        ],
+        }],
       },
       {
         test: /\.(js)$/,
@@ -73,39 +82,39 @@ module.exports = {
       },
       {
         test: /\.(fbx|glb|obj|3ds|gltf)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/models/' },
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/models/'
           },
-        ],
+        }, ],
       },
       {
         test: /\.(bin)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/models/' },
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/models/'
           },
-        ],
+        }, ],
       },
       {
         test: /\.(mp3|wav)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/audios/' }
-          },
-        ]
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/audios/'
+          }
+        }, ]
       },
       {
         test: /\.(mp4|webm)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: { outputPath: 'assets/videos/' }
-          },
-        ]
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'assets/videos/'
+          }
+        }, ]
       },
       {
         test: /\.(glsl|vs|fs|vert|frag)$/,
