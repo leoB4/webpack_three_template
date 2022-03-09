@@ -11,7 +11,7 @@ export default class Papillon {
 	}
 
 	init() {
-		console.log(this);
+		console.log(this)
 		this.papillon = this.assets.models.suzanne.scene
 		this.container.add(this.papillon)
 	}
